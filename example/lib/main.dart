@@ -81,6 +81,7 @@ class MyAppState extends State<MyApp> {
     darwinTouchIDAuthenticationForceReuseContextDuration: const Duration(
       seconds: 5,
     ),
+    androidUseStrongBox: false,
   );
 
   BiometricStorageFile? _authStorage;

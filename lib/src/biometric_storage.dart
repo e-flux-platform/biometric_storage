@@ -133,6 +133,7 @@ class StorageFileInitOptions {
     )
     int authenticationValidityDurationSeconds = -1,
     this.authenticationRequired = true,
+    this.androidUseStrongBox = true,
     this.androidBiometricOnly = true,
     this.darwinBiometricOnly = true,
     this.darwinKeychainAccessGroup,
@@ -204,6 +205,15 @@ class StorageFileInitOptions {
   /// https://developer.apple.com/documentation/security/sharing-access-to-keychain-items-among-a-collection-of-apps
   final String? darwinKeychainAccessGroup;
 
+  /// Whether to use Android StrongBox when available.
+  /// Only affects Android API 28+ devices that have StrongBox hardware support.
+  /// When true and StrongBox is supported, keys will be stored in the more secure
+  /// Secure Element (isolated from the main CPU, etc.). When false, keys will use
+  /// the Trusted Execution Environment (TEE). The StrongBox/SE implementation is
+  /// broken on some devices, leading to crashes and data loss.
+  /// Defaults to `true` for backwards compatibility.
+  final bool androidUseStrongBox;
+
   Map<String, dynamic> toJson() => <String, dynamic>{
     'androidAuthenticationValidityDurationSeconds':
         androidAuthenticationValidityDuration?.inSeconds,
@@ -215,6 +225,7 @@ class StorageFileInitOptions {
     'androidBiometricOnly': androidBiometricOnly,
     'darwinBiometricOnly': darwinBiometricOnly,
     'darwinKeychainAccessGroup': darwinKeychainAccessGroup,
+    'androidUseStrongBox': androidUseStrongBox,
   };
 }
 
