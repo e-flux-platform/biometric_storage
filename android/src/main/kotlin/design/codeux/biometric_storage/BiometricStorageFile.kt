@@ -46,9 +46,15 @@ class BiometricStorageFile(
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             if (options.androidAuthenticationValidityDuration == null) {
+                // Timeout 0: every use of the key needs its own authentication,
+                // bound to the operation through the prompt's CryptoObject.
                 setUserAuthenticationParameters(
                     0,
-                    KeyProperties.AUTH_BIOMETRIC_STRONG
+                    if (options.androidBiometricOnly) {
+                        KeyProperties.AUTH_BIOMETRIC_STRONG
+                    } else {
+                        KeyProperties.AUTH_DEVICE_CREDENTIAL or KeyProperties.AUTH_BIOMETRIC_STRONG
+                    }
                 )
             } else {
                 setUserAuthenticationParameters(
@@ -72,14 +78,6 @@ class BiometricStorageFile(
         fileV2 = File(baseDir, fileNameV2)
 
         logger.trace { "Initialized $this with $options" }
-
-        validateOptions()
-    }
-
-    private fun validateOptions() {
-        if (options.androidAuthenticationValidityDuration == null && !options.androidBiometricOnly) {
-            throw IllegalArgumentException("when androidAuthenticationValidityDuration is null, androidBiometricOnly must be true")
-        }
     }
 
     fun cipherForEncrypt() = cryptographyManager.getInitializedCipherForEncryption(masterKeyName)

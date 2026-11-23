@@ -176,12 +176,13 @@ class StorageFileInitOptions {
 
   /// Only makes difference on Android, where if set true, you can't use
   /// PIN/pattern/password to get the file.
-  /// On Android < 30 this will always be ignored. (always `true`)
+  /// On Android < 30 this will always be ignored (always `true`), by
+  /// `canAuthenticate` too.
   /// https://github.com/authpass/biometric_storage/issues/12#issuecomment-900358154
   ///
-  /// Also: this **must** be `true` if [androidAuthenticationValidityDuration]
-  /// is null.
-  /// https://github.com/authpass/biometric_storage/issues/12#issuecomment-902508609
+  /// With `false` and a null [androidAuthenticationValidityDuration], every
+  /// read and write prompts, and the prompt accepts a strong biometric or the
+  /// PIN/pattern/password.
   final bool androidBiometricOnly;
 
   /// Only for iOS and macOS:
